@@ -8,6 +8,7 @@ public class Gui extends JFrame {
     private JTextField textField1;
     private JTextArea textArea1;
     private JPanel base;
+    private JTextField turnsLeft;
 
     public Gui() {
         (this).setContentPane(base);
@@ -18,6 +19,8 @@ public class Gui extends JFrame {
         Proc proc1 = new Proc();
         proc1.chooseStreet();
         proc1.generateHiddenWord();
+        textArea1.append(proc1.hiddenWord);
+        textField1.grabFocus();
         textField1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -25,13 +28,16 @@ public class Gui extends JFrame {
                 } else {
                     proc1.setInput(textField1.getText().toUpperCase().charAt(0));
                     if (proc1.gameTurn()) {
-                        textArea1.append("TAK\n");
+
                         textArea1.append(proc1.getOutput());
+                        textArea1.append("TAK\n");
                         chances--;
                         textField1.setText("");
+                        turnsLeft.setText("Pozostało prób: " + chances);
                     } else {
-                        textArea1.append("nie\n");
+
                         textArea1.append(proc1.getOutput());
+                        textArea1.append("nie\n");
                         chances--;
                         textField1.setText("");
                     }
@@ -40,6 +46,7 @@ public class Gui extends JFrame {
                         JOptionPane.showMessageDialog(null, "Przegrałeś\nTo była: " + proc1.randomStreet);
                         dispose();
                     }
+                    turnsLeft.setText("Pozostało prób: " + chances);
                 }
             }
         });

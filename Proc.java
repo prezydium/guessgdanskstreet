@@ -33,7 +33,7 @@ public class Proc {
                 sb.setCharAt(x, input);
                 x = randomStreet.indexOf(input, x + 1);
             }
-           output = ("Jest litera!  " + sb);
+           output = sb.toString();
             hiddenWord = sb.toString();
         return true;
         }
@@ -64,7 +64,7 @@ public class Proc {
             String line = scanner.nextLine();
             streets.add(line);
         }
-        int random = (int) (Math.random() * streets.size());
+        int random = (int) (Math.random() * (streets.size()));
         randomStreet = streets.get(random);
 
     }
