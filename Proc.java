@@ -11,31 +11,37 @@ public class Proc {
     char input;
 
     String output;
+
+    public void setRandomStreet(String randomStreet) {
+        this.randomStreet = randomStreet;
+    }
+
     String randomStreet = "dupa";
     boolean isChar;
     String hiddenWord = "";
 
 
     public String getOutput() {
+
         return output;
     }
 
-    public boolean gameTurn(){
+    public boolean gameTurn() {
         StringBuilder sb = new StringBuilder(hiddenWord);
 
         int x = randomStreet.indexOf(input);
 
         if (x == -1) {
-            isChar = false;
+            output = sb.toString();
             return false;
         } else {
             while (x > -1) {
                 sb.setCharAt(x, input);
                 x = randomStreet.indexOf(input, x + 1);
             }
-           output = sb.toString();
+            output = sb.toString();
             hiddenWord = sb.toString();
-        return true;
+            return true;
         }
 
     }
@@ -69,7 +75,7 @@ public class Proc {
 
     }
 
-    public void generateHiddenWord(){
+    public void generateHiddenWord() {
         StringBuilder sb = new StringBuilder();
         String unknown = "";
         for (int i = 0; i < randomStreet.length(); i++) {
@@ -77,6 +83,16 @@ public class Proc {
         }
         hiddenWord = sb.toString();
     }
+
+    public boolean instantAnswer(String e) {
+        String a = e.toUpperCase();
+        if (a.equals(randomStreet)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
 }
 

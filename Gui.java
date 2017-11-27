@@ -9,6 +9,9 @@ public class Gui extends JFrame {
     private JTextArea textArea1;
     private JPanel base;
     private JTextField turnsLeft;
+    private JButton znamOdpowiedźButton;
+    private static Proc proc1 = new Proc();
+    private static Streets street = new Streets();
 
     public Gui() {
         (this).setContentPane(base);
@@ -16,10 +19,9 @@ public class Gui extends JFrame {
         (this).setSize(800, 600);
         (this).setVisible(true);
         (this).setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        Proc proc1 = new Proc();
-        proc1.chooseStreet();
-        proc1.generateHiddenWord();
+
         textArea1.append(proc1.hiddenWord);
+        textArea1.append(("\nZgadnij wybierając po 1 literze jaka nazwa ulicy w Gdańsku została u góry ukryta\n"));
         textField1.grabFocus();
         textField1.addActionListener(new ActionListener() {
             @Override
@@ -30,30 +32,59 @@ public class Gui extends JFrame {
                     if (proc1.gameTurn()) {
 
                         textArea1.append(proc1.getOutput());
-                        textArea1.append("TAK\n");
+                        textArea1.append("       Trafiony!\n");
                         chances--;
                         textField1.setText("");
                         turnsLeft.setText("Pozostało prób: " + chances);
                     } else {
 
                         textArea1.append(proc1.getOutput());
-                        textArea1.append("nie\n");
+                        textArea1.append("      Pudło!\n");
                         chances--;
                         textField1.setText("");
+                        turnsLeft.setText("Pozostało prób: " + chances);
                     }
                     if (chances == 0) {
                         textArea1.append("Przegrałeś");
                         JOptionPane.showMessageDialog(null, "Przegrałeś\nTo była: " + proc1.randomStreet);
                         dispose();
                     }
+                    if(proc1.hiddenWord.indexOf("*")== -1){
+                        textArea1.append("Zwycięstwo!");
+                        JOptionPane.showMessageDialog(null, "Zwycięstwo!\nUdało Ci się po: " +( 10 - chances) +
+                                " próbach");
+                    }
                     turnsLeft.setText("Pozostało prób: " + chances);
                 }
             }
         });
 
+        znamOdpowiedźButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String answer = JOptionPane.showInputDialog(null, "odp");
+                if (proc1.instantAnswer(answer)){
+                    JOptionPane.showMessageDialog(null, "Zwycięstwo!\nUdało Ci się po: " +( 10 - chances) +
+                            " próbach");
+                    dispose();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Zła odpowiedź, tracisz 3 szanse!");
+                    chances = chances - 3;
+                    turnsLeft.setText("Pozostało prób: " + chances);
+                    if (chances < 0) {
+                        JOptionPane.showMessageDialog(null, "Przegrałeś\nTo była: " + proc1.randomStreet);
+                        dispose();
+                    }
+                }
+
+            }
+        });
     }
 
     public static void main(String[] args) {
+
+        proc1.setRandomStreet(street.chooseStreet());
+        proc1.generateHiddenWord();
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
