@@ -10,10 +10,15 @@ public class Gui extends JFrame {
     private JPanel base;
     private JTextField turnsLeft;
     private JButton znamOdpowiedźButton;
+    private JLabel info;
     private static Proc proc1 = new Proc();
     private static Streets street = new Streets();
 
-    public Gui() {
+    public Gui() throws NullPointerException {
+
+        proc1.setRandomStreet(street.chooseStreet());
+        proc1.generateHiddenWord();
+
         (this).setContentPane(base);
         //(this).add(textArea1, textField1);
         (this).setSize(800, 600);
@@ -21,7 +26,7 @@ public class Gui extends JFrame {
         (this).setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         textArea1.append(proc1.hiddenWord);
-        textArea1.append(("\nZgadnij wybierając po 1 literze jaka nazwa ulicy w Gdańsku została u góry ukryta\n"));
+        textArea1.append(("\nZgadnij, wybierając po 1 literze, jaka nazwa ulicy w Gdańsku została u góry ukryta\n"));
         textField1.grabFocus();
         textField1.addActionListener(new ActionListener() {
             @Override
@@ -62,19 +67,22 @@ public class Gui extends JFrame {
         znamOdpowiedźButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String answer = JOptionPane.showInputDialog(null, "odp");
-                if (proc1.instantAnswer(answer)){
-                    JOptionPane.showMessageDialog(null, "Zwycięstwo!\nUdało Ci się po: " +( 10 - chances) +
+                String answer = JOptionPane.showInputDialog(null, "Wpisz odpowiedź");
+
+                if (proc1.instantAnswer(answer)) {
+                    JOptionPane.showMessageDialog(null, "Zwycięstwo!\nUdało Ci się po: " + (10 - chances) +
                             " próbach");
                     dispose();
                 } else {
                     JOptionPane.showMessageDialog(null, "Zła odpowiedź, tracisz 3 szanse!");
                     chances = chances - 3;
                     turnsLeft.setText("Pozostało prób: " + chances);
-                    if (chances < 0) {
+                    if (chances <= 0) {
                         JOptionPane.showMessageDialog(null, "Przegrałeś\nTo była: " + proc1.randomStreet);
                         dispose();
+
                     }
+
                 }
 
             }
@@ -83,8 +91,7 @@ public class Gui extends JFrame {
 
     public static void main(String[] args) {
 
-        proc1.setRandomStreet(street.chooseStreet());
-        proc1.generateHiddenWord();
+
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -95,7 +102,4 @@ public class Gui extends JFrame {
 
     }
 
-    public void appendToTextArea1(String s) {
-        textArea1.append(s);
-    }
 }
